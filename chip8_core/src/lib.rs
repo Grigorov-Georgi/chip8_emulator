@@ -61,6 +61,20 @@ impl Emu {
         new_emu
     }
 
+    pub fn reset(&mut self) {
+        self.pc = START_ADDR;
+        self.ram = [0; RAM_SIZE];
+        self.ram[..FONT_SET_SIZE].copy_from_slice(&FONT_SET);
+        self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
+        self.v_reg = [0; NUM_REGS];
+        self.i_reg = 0;
+        self.sp = 0;
+        self.stack = [0; STACK_SIZE];
+        self.keys = [false; NUM_KEYS];
+        self.dt = 0;
+        self.st = 0;
+    }
+
     fn push(&mut self, val: u16) {
         self.stack[self.sp as usize] = val;
         self.sp += 1;
