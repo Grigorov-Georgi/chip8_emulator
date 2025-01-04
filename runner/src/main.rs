@@ -53,8 +53,18 @@ fn main() {
     'gameloop: loop {
         for event in event_pump.poll_iter() {
             match event {
-                Event::Quit { .. } => { //TODO: check what this syntax do, its probably _ for struct
+                Event::Quit { .. } | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'gameloop
+                }
+                Event::KeyDown { keycode: Some(key), .. } => {
+                    if let Some(k) = key2btn(key) {
+                        chip_8.keypress(k, true);
+                    }
+                }
+                Event::KeyUp { keycode: Some(key), .. } => {
+                    if let Some(k) = key2btn(key) {
+                        chip_8.keypress(k, false);
+                    }
                 }
                 _ => ()
             }
@@ -64,11 +74,11 @@ fn main() {
             chip_8.tick();
         }
         chip_8.tick_timers();
-        draw_scren(&chip_8, &mut canvas);
+        draw_screen(&chip_8, &mut canvas);
     }
 }
 
-fn draw_scren(emu: &Emu, canvas: &mut Canvas<Window>) {
+fn draw_screen(emu: &Emu, canvas: &mut Canvas<Window>) {
     // Clear canvas as black
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
@@ -102,7 +112,7 @@ fn draw_scren(emu: &Emu, canvas: &mut Canvas<Window>) {
 // +---+---+---+---+       +---+---+---+---+
 // | Z | X | C | V |       | A | 0 | B | F |
 // +---+---+---+---+       +---+---+---+---+
-fn key2byn(key: Keycode) -> Option<usize> {
+fn key2btn(key: Keycode) -> Option<usize> {
     match key {
         Keycode::Num1 => Some(0x1),
         Keycode::Num2 => Some(0x2),
@@ -120,6 +130,6 @@ fn key2byn(key: Keycode) -> Option<usize> {
         Keycode::X => Some(0x0),
         Keycode::C => Some(0xB),
         Keycode::V => Some(0xF),
-        _ => None
+        _ => None,
     }
 }

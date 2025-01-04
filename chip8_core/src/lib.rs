@@ -371,7 +371,7 @@ impl Emu {
 
         if self.st > 0 {
             if self.st == 1 {
-                todo!("beep")
+                //todo!("beep")
             }
 
             self.st -= 1;
