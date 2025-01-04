@@ -16,7 +16,7 @@ A few games are added to ```./games``` folder. To run a CHIP-8 ROM, use the foll
 ```cargo run ./games/{your_game}``` 
 
 - Example:
-``` cargo run ./games/BLINKY```)
+``` cargo run ./games/BLINKY```
 
 ## Information Sources
 - This project is based on the guide provided here: https://github.com/aquova/chip8-book
