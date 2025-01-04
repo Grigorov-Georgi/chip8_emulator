@@ -1,0 +1,2 @@
+- sdl2 problem solution: https://github.com/PistonDevelopers/rust-empty/issues/175
+- chip-8 guide: https://github.com/aquova/chip8-book
