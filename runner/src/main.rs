@@ -6,11 +6,14 @@ use sdl2::pixels::Color;
 use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
+use sdl2::keyboard::Keycode;
 use chip8_core::*;
 
 const SCALE: u32 = 15;
 const WINDOW_WIDTH: u32 = (SCREEN_WIDTH as u32) * SCALE;
 const WINDOW_HEIGHT: u32 = (SCREEN_HEIGHT as u32) * SCALE;
+
+const TICKS_PER_FRAME: usize = 10;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -57,7 +60,10 @@ fn main() {
             }
         }
 
-        chip_8.tick();
+        for _ in 0..TICKS_PER_FRAME {
+            chip_8.tick();
+        }
+        chip_8.tick_timers();
         draw_scren(&chip_8, &mut canvas);
     }
 }
@@ -84,4 +90,36 @@ fn draw_scren(emu: &Emu, canvas: &mut Canvas<Window>) {
     }
 
     canvas.present();
+}
+
+// Keyboard to Chip-8 Key Mapping
+// +---+---+---+---+       +---+---+---+---+
+// | 1 | 2 | 3 | 4 |       | 1 | 2 | 3 | C |
+// +---+---+---+---+       +---+---+---+---+
+// | Q | W | E | R |       | 4 | 5 | 6 | D |
+// +---+---+---+---+  -->  +---+---+---+---+
+// | A | S | D | F |       | 7 | 8 | 9 | E |
+// +---+---+---+---+       +---+---+---+---+
+// | Z | X | C | V |       | A | 0 | B | F |
+// +---+---+---+---+       +---+---+---+---+
+fn key2byn(key: Keycode) -> Option<usize> {
+    match key {
+        Keycode::Num1 => Some(0x1),
+        Keycode::Num2 => Some(0x2),
+        Keycode::Num3 => Some(0x3),
+        Keycode::Num4 => Some(0xC),
+        Keycode::Q => Some(0x4),
+        Keycode::W => Some(0x5),
+        Keycode::E => Some(0x6),
+        Keycode::R => Some(0xD),
+        Keycode::A => Some(0x7),
+        Keycode::S => Some(0x8),
+        Keycode::D => Some(0x9),
+        Keycode::F => Some(0xE),
+        Keycode::Z => Some(0xA),
+        Keycode::X => Some(0x0),
+        Keycode::C => Some(0xB),
+        Keycode::V => Some(0xF),
+        _ => None
+    }
 }
