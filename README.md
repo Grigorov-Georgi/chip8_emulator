@@ -18,6 +18,35 @@ A few games are added to ```./games``` folder. To run a CHIP-8 ROM, use the foll
 - Example:
 ``` cargo run ./games/BLINKY```
 
+## Game controls
+
+PONG - ```cargo run ./games/PONG```
+
+| CHIP-8 Key | Keyboard Key | Action                            |
+|------------|--------------|-----------------------------------|
+| 1          | `1`          | Move Player 1 (left paddle) up    |
+| 4          | `Q`          | Move Player 1 (left paddle) down  |
+| C          | `4`          | Move Player 2 (right paddle) up   |
+| D          | `R`          | Move Player 2 (right paddle) down |
+
+TETRIS - ```cargo run ./games/TETRIS```
+
+| CHIP-8 Key | Keyboard Key | Action            |
+|------------|--------------|-------------------|   
+| 4          | `W`          | 	Move piece left  |  
+| 6          | `E`          | Move piece right  |
+| 1          | `Q`          | Rotate piece      |
+| 5          | `S`          | Move piece down   |
+
+BLINKY - ```cargo run ./games/BLINKY```
+
+| CHIP-8 Key | Keyboard Key | Action     |
+|------------|--------------|------------|
+| 4          | `A`          | Move left  |
+| 6          | `S`          | Move right |
+| 3          | `3`          | Move up    |
+| E          | `E`          | Move down  |
+
 ## Information Sources
 - This project is based on the guide provided here: https://github.com/aquova/chip8-book
 
@@ -25,8 +54,8 @@ A few games are added to ```./games``` folder. To run a CHIP-8 ROM, use the foll
 
 ### Required
 - [ ] improve error handling
-- [ ] fix the keyboard input
-- [ ] add keyboard instructions to the README.md file
+- [X] fix the keyboard input
+- [X] add keyboard instructions to the README.md file
 
 ### Optional
 - [ ] add audio support
