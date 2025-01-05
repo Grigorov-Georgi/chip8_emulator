@@ -1,5 +1,3 @@
-use rand;
-
 pub const SCREEN_WIDTH: usize = 64;
 pub const SCREEN_HEIGHT: usize = 32;
 
@@ -100,7 +98,7 @@ impl Emu {
         let digit4 = op & 0x000F;
 
         match (digit1, digit2, digit3, digit4) {
-            (0, 0, 0, 0) => return, // Nop - do nothing
+            (0, 0, 0, 0) => (), // NOP - do nothing
             (0, 0, 0xE, 0) => {
                 // CLS - clear screen
                 self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
@@ -270,7 +268,7 @@ impl Emu {
                 // Iterate over each row of our sprite
                 for y_line in 0..num_rows {
                     // Determine which memory address our row's data is stored
-                    let addr = self.i_reg + y_line as u16;
+                    let addr = self.i_reg + y_line;
                     let pixels = self.ram[addr as usize];
 
                     // Iterate over each column in our row
@@ -431,5 +429,11 @@ impl Emu {
     fn pop(&mut self) -> u16 {
         self.sp -= 1;
         self.stack[self.sp as usize]
+    }
+}
+
+impl Default for Emu {
+    fn default() -> Self {
+        Self::new()
     }
 }

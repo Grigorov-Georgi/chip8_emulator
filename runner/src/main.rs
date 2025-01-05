@@ -33,7 +33,7 @@ fn main() {
 
     let mut event_pump = sdl_context.event_pump().unwrap();
 
-    let mut chip_8 = Emu::new();
+    let mut chip_8 = Emu::default();
 
     // std::fs::read_to_string can corrupt the data because String expects UTF-8 format
     let mut rom = File::open(&args[1]).expect("Unable to open file"); //TODO: handle properly
