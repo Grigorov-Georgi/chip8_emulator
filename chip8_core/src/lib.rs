@@ -256,7 +256,6 @@ impl Emu {
             }
             // DRAW
             (0xD, _, _, _) => {
-
                 // Get the (x, y) coords for our sprite
                 let x_coord = self.v_reg[digit2 as usize] as u16;
                 let y_coord = self.v_reg[digit3 as usize] as u16;
@@ -269,17 +268,14 @@ impl Emu {
 
                 // Iterate over each row of our sprite
                 for y_line in 0..num_rows {
-
                     // Determine which memory address our row's data is stored
                     let addr = self.i_reg + y_line;
                     let pixels = self.ram[addr as usize];
 
                     // Iterate over each column in our row
                     for x_line in 0..8 {
-
                         // Use a mask to fetch current pixel's bit. Only flip if a 1
                         if (pixels & (0b1000_0000 >> x_line)) != 0 {
-
                             // Sprites should wrap around screen, so apply modulo
                             let x = (x_coord + x_line) as usize % SCREEN_WIDTH;
                             let y = (y_coord + y_line) as usize % SCREEN_HEIGHT;
