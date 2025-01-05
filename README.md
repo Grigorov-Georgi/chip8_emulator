@@ -46,6 +46,27 @@ BLINKY - ```cargo run ./games/BLINKY```
 | 3          | `3`          | Move up    |
 | E          | `E`          | Move down  |
 
+## Keyboard to Chip-8 Key Mapping
+
+| Keyboard Key | CHIP-8 Key |
+|--------------|------------|
+| `1`          | `1`        |
+| `2`          | `2`        |
+| `3`          | `3`        |
+| `4`          | `C`        |
+| `Q`          | `4`        |
+| `W`          | `5`        |
+| `E`          | `6`        |
+| `R`          | `D`        |
+| `A`          | `7`        |
+| `S`          | `8`        |
+| `D`          | `9`        |
+| `F`          | `E`        |
+| `Z`          | `A`        |
+| `X`          | `0`        |
+| `C`          | `B`        |
+| `V`          | `F`        |
+
 ## Information Sources
 This project is based on the guide provided here: https://github.com/aquova/chip8-book
 

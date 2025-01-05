@@ -1,13 +1,8 @@
-use std::env;
-use std::fs::File;
-use std::io::Read;
-use sdl2::event::Event;
-use sdl2::pixels::Color;
-use sdl2::rect::Rect;
-use sdl2::render::Canvas;
-use sdl2::video::Window;
-use sdl2::keyboard::Keycode;
 use chip8_core::*;
+use sdl2::{
+    event::Event, keyboard::Keycode, pixels::Color, rect::Rect, render::Canvas, video::Window,
+};
+use std::{env, fs::File, io::Read};
 
 const SCALE: u32 = 15;
 const WINDOW_WIDTH: u32 = (SCREEN_WIDTH as u32) * SCALE;
@@ -31,10 +26,7 @@ fn main() {
         .build()
         .unwrap();
 
-    let mut canvas = window.into_canvas()
-        .present_vsync()
-        .build()
-        .unwrap();
+    let mut canvas = window.into_canvas().present_vsync().build().unwrap();
 
     canvas.clear();
     canvas.present();
@@ -53,20 +45,26 @@ fn main() {
     'gameloop: loop {
         for event in event_pump.poll_iter() {
             match event {
-                Event::Quit { .. } | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
-                    break 'gameloop
-                }
-                Event::KeyDown { keycode: Some(key), .. } => {
+                Event::Quit { .. }
+                | Event::KeyDown {
+                    keycode: Some(Keycode::Escape),
+                    ..
+                } => break 'gameloop,
+                Event::KeyDown {
+                    keycode: Some(key), ..
+                } => {
                     if let Some(k) = key2btn(key) {
                         chip_8.keypress(k, true);
                     }
                 }
-                Event::KeyUp { keycode: Some(key), .. } => {
+                Event::KeyUp {
+                    keycode: Some(key), ..
+                } => {
                     if let Some(k) = key2btn(key) {
                         chip_8.keypress(k, false);
                     }
                 }
-                _ => ()
+                _ => (),
             }
         }
 
