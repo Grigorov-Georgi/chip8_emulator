@@ -7,7 +7,12 @@ A simple CHIP-8 emulator written in Rust.
    - Follow the instructions at https://www.rust-lang.org/tools/install to install Rust.
    
 2. Install SDL2
-   - Use Homebrew to install SDL2: ```brew install sdl2```
+   - Use Homebrew to install SDL2
+   
+```bash
+brew install sdl2
+```
+
    - For additional configuration details, refer to: https://github.com/PistonDevelopers/rust-empty/issues/175.
 
 ## Run
