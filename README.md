@@ -13,13 +13,22 @@ A simple CHIP-8 emulator written in Rust.
 ## Run
 A few games are added to ```./games``` folder. To run a CHIP-8 ROM, use the following command:
 
-```cargo run ./games/{your_game}``` 
+```bash
+cargo run ./games/{your_game}
+``` 
 
-Example: ``` cargo run ./games/BLINKY```
+Example: 
+
+```bash
+cargo run ./games/BLINKY
+```
 
 ## Game controls
 
-PONG - ```cargo run ./games/PONG```
+PONG
+```bash
+cargo run ./games/PONG
+```
 
 | CHIP-8 Key | Keyboard Key | Action                            |
 |------------|--------------|-----------------------------------|
@@ -28,7 +37,10 @@ PONG - ```cargo run ./games/PONG```
 | C          | `4`          | Move Player 2 (right paddle) up   |
 | D          | `R`          | Move Player 2 (right paddle) down |
 
-TETRIS - ```cargo run ./games/TETRIS```
+TETRIS
+```bash
+cargo run ./games/TETRIS
+```
 
 | CHIP-8 Key | Keyboard Key | Action            |
 |------------|--------------|-------------------|   
@@ -37,7 +49,11 @@ TETRIS - ```cargo run ./games/TETRIS```
 | 1          | `Q`          | Rotate piece      |
 | 5          | `S`          | Move piece down   |
 
-BLINKY - ```cargo run ./games/BLINKY```
+BLINKY
+
+```bash
+cargo run ./games/BLINKY
+```
 
 | CHIP-8 Key | Keyboard Key | Action     |
 |------------|--------------|------------|
@@ -69,6 +85,16 @@ BLINKY - ```cargo run ./games/BLINKY```
 
 ## Information Sources
 This project is based on the guide provided here: https://github.com/aquova/chip8-book
+
+## Pre-Push Hook
+
+This repository provides a `pre-push` hook located in the `.githooks` folder. It ensures that the code is properly 
+formatted and linted before being pushed to the remote repository. To activate, configure Git to use the `.githooks`
+directory as the hooks folder:
+
+```bash
+git config core.hooksPath .githooks
+```
 
 ## TODO
 
