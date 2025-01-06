@@ -10,44 +10,43 @@ const WINDOW_HEIGHT: u32 = (SCREEN_HEIGHT as u32) * SCALE;
 
 const TICKS_PER_FRAME: usize = 10;
 
-fn main() {
+fn main() -> Result<(), String> {
     let game_name = env::args()
         .nth(1)
-        .unwrap_or_else(|| panic!("Invalid arguments. Usage 'cargo run ./games/GAME_NAME'"));
+        .expect("Invalid arguments. Please use 'cargo run ./games/GAME_NAME'");
 
     // SDL setup
-    let sdl_context = sdl2::init().unwrap_or_else(|err| panic!("{err}"));
+    let sdl_context = sdl2::init()?;
 
-    let video_subsystem = sdl_context.video().unwrap_or_else(|err| panic!("{err}"));
+    let video_subsystem = sdl_context.video()?;
 
     let window = video_subsystem
         .window("CHIP-8 EMULATOR", WINDOW_WIDTH, WINDOW_HEIGHT)
         .position_centered()
         .opengl()
         .build()
-        .unwrap_or_else(|err| panic!("{err}"));
+        .expect("Unable to create SDL window");
 
     let mut canvas = window
         .into_canvas()
         .present_vsync()
         .build()
-        .unwrap_or_else(|err| panic!("{err}"));
+        .expect("Unable to create SDL canvas");
 
     canvas.clear();
     canvas.present();
 
-    let mut event_pump = sdl_context
-        .event_pump()
-        .unwrap_or_else(|err| panic!("{err}"));
+    let mut event_pump = sdl_context.event_pump()?;
 
     let mut chip_8 = Emu::default();
 
     // std::fs::read_to_string can corrupt the data because String expects UTF-8 format
-    let mut rom = File::open(&game_name).expect("Unable to open file");
+    let mut rom = File::open(&game_name)
+        .expect("Unable to open the specified file");
 
     let mut buffer = Vec::new();
     rom.read_to_end(&mut buffer)
-        .unwrap_or_else(|err| panic!("{err}"));
+        .expect("Unable to read the game ROM");
 
     chip_8.load_game(&buffer);
 
@@ -84,6 +83,8 @@ fn main() {
         chip_8.tick_timers();
         draw_screen(&chip_8, &mut canvas);
     }
+
+    Ok(())
 }
 
 fn draw_screen(emu: &Emu, canvas: &mut Canvas<Window>) {
