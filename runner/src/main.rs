@@ -11,34 +11,43 @@ const WINDOW_HEIGHT: u32 = (SCREEN_HEIGHT as u32) * SCALE;
 const TICKS_PER_FRAME: usize = 10;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() != 2 {
-        panic!("Invalid arguments. Usage 'cargo run path/to/game'");
-    }
+    let game_name = env::args()
+        .nth(1)
+        .unwrap_or_else(|| panic!("Invalid arguments. Usage 'cargo run ./games/GAME_NAME'"));
 
     // SDL setup
-    let sdl_context = sdl2::init().unwrap(); //TODO: handle properly
-    let video_subsystem = sdl_context.video().unwrap();
+    let sdl_context = sdl2::init().unwrap_or_else(|err| panic!("{err}"));
+
+    let video_subsystem = sdl_context.video().unwrap_or_else(|err| panic!("{err}"));
+
     let window = video_subsystem
         .window("CHIP-8 EMULATOR", WINDOW_WIDTH, WINDOW_HEIGHT)
         .position_centered()
         .opengl()
         .build()
-        .unwrap();
+        .unwrap_or_else(|err| panic!("{err}"));
 
-    let mut canvas = window.into_canvas().present_vsync().build().unwrap();
+    let mut canvas = window
+        .into_canvas()
+        .present_vsync()
+        .build()
+        .unwrap_or_else(|err| panic!("{err}"));
 
     canvas.clear();
     canvas.present();
 
-    let mut event_pump = sdl_context.event_pump().unwrap();
+    let mut event_pump = sdl_context
+        .event_pump()
+        .unwrap_or_else(|err| panic!("{err}"));
 
     let mut chip_8 = Emu::default();
 
     // std::fs::read_to_string can corrupt the data because String expects UTF-8 format
-    let mut rom = File::open(&args[1]).expect("Unable to open file"); //TODO: handle properly
+    let mut rom = File::open(&game_name).expect("Unable to open file");
+
     let mut buffer = Vec::new();
-    rom.read_to_end(&mut buffer).unwrap();
+    rom.read_to_end(&mut buffer)
+        .unwrap_or_else(|err| panic!("{err}"));
 
     chip_8.load_game(&buffer);
 
@@ -71,6 +80,7 @@ fn main() {
         for _ in 0..TICKS_PER_FRAME {
             chip_8.tick();
         }
+
         chip_8.tick_timers();
         draw_screen(&chip_8, &mut canvas);
     }
@@ -93,7 +103,7 @@ fn draw_screen(emu: &Emu, canvas: &mut Canvas<Window>) {
 
             // Draw a rectangle at (x,y), scaled up by our SCALE value
             let rect = Rect::new((x * SCALE) as i32, (y * SCALE) as i32, SCALE, SCALE);
-            canvas.fill_rect(rect).unwrap(); // TODO: handle properly
+            canvas.fill_rect(rect).unwrap_or_else(|err| panic!("{err}"));
         }
     }
 
