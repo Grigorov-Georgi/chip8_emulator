@@ -41,8 +41,7 @@ fn main() -> Result<(), String> {
     let mut chip_8 = Emu::default();
 
     // std::fs::read_to_string can corrupt the data because String expects UTF-8 format
-    let mut rom = File::open(&game_name)
-        .expect("Unable to open the specified file");
+    let mut rom = File::open(&game_name).expect("Unable to open the specified file");
 
     let mut buffer = Vec::new();
     rom.read_to_end(&mut buffer)
