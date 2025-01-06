@@ -1,16 +1,23 @@
 #!/bin/bash
 
-echo "Running cargo fmt..."
-cargo fmt --check
+echo "1.Running cargo check..."
+cargo check
 if [ $? -ne 0 ]; then
-    echo "❌ Code is not properly formatted. Please run 'cargo fmt'."
+    echo "❌Cargo check failed. Please fix the errors before pushing."
     exit 1
 fi
 
-echo "Running cargo clippy..."
+echo "2.Running cargo clippy..."
 cargo clippy -- -D warnings
 if [ $? -ne 0 ]; then
     echo "❌ Linting failed. Please fix the issues before pushing."
+    exit 1
+fi
+
+echo "3.Running cargo fmt..."
+cargo fmt --check
+if [ $? -ne 0 ]; then
+    echo "❌ Code is not properly formatted. Please run 'cargo fmt'."
     exit 1
 fi
 
