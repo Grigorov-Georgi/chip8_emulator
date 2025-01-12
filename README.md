@@ -67,6 +67,31 @@ cargo run ./games/BLINKY
 | 3          | `3`          | Move up    |
 | E          | `E`          | Move down  |
 
+## Emulator Object - Emu
+
+1. PC: program counter - keep the index of the current instruction.
+2. RAM 
+   1. ROM file data is copied into the RAM. 
+   2. 4096 bytes (4KB) of size
+3. Screen
+   1. 64x32 monochrome display (1 bit per pixel)
+4. V Registers
+   1. 16 8-bit registers which the game can use as it pleases for much faster operation.
+   2. Numbered from V0 to VF
+5. I Register
+   1. 16-bit
+   2. used for indexing into RAM for reads and writes.
+6. Stack
+   1. 16-bit
+   2. LIFO
+   3. used while entering or exiting a subroutine, where the stack is used to know where you started so you can return after the routine ends
+   4. std::collections::VecDeque is not used because it doesn't work for WebAssembly.
+   5. used statically sized array and an index pointing the top ot the stack (sp - Stack Pointer)
+7. Timers
+   1. Delay Timer - register used by the system as a typical timer, counting down every cycle and performing some action if it hits 0
+   2. Sound Timer - register used to count down every clock cycle, but upon hitting 0 emits a noise.
+   3. Both registers are 8-bit
+
 ## Opcode Table
 
 Chip-8 has 35 opcodes, which are all 2 bytes long and stored big-endian.
@@ -81,7 +106,7 @@ VN: One of the 16 available variables. N may be 0 to F (hexadecimal)
 | Opcode | Pseudo Code                                                              | Explanation                                                                                                                                                                                                                                                                                                                                                                                                      |
 |--------|--------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 0000   | -                                                                        | Do nothing and move on to the next opcode                                                                                                                                                                                                                                                                                                                                                                        |
-| 00E0   | disp_clear()                                                             | Clears the screen                                                                                                                                                                                                                                                                                                                                                                                                |
+| 00E0   | disp_clear()                                                             | Clears the screen. Reset the screen buffer                                                                                                                                                                                                                                                                                                                                                                       |
 | 00EE   | return;                                                                  | Returns form a subroutine                                                                                                                                                                                                                                                                                                                                                                                        |
 | 1NNN   | goto NNN;                                                                | Jumps to address NNN                                                                                                                                                                                                                                                                                                                                                                                             |
 | 2NNN   | *(0xNNN) ()                                                              | Calls subroutine at NNN                                                                                                                                                                                                                                                                                                                                                                                          |
