@@ -1,6 +1,18 @@
 pub const SCREEN_WIDTH: usize = 64;
 pub const SCREEN_HEIGHT: usize = 32;
 
+const BCD_LOOKUP: [[u8; 3]; 256] = {
+    let mut table = [[0; 3]; 256];
+    let mut i = 0;
+    while i < 256 {
+        table[i][0] = (i / 100) as u8;
+        table[i][1] = ((i / 10) % 10) as u8;
+        table[i][2] = (i % 10) as u8;
+        i += 1;
+    }
+    table
+};
+
 const FONT_SET_SIZE: usize = 80;
 const FONT_SET: [u8; FONT_SET_SIZE] = [
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -100,8 +112,8 @@ impl Emu {
         match (digit1, digit2, digit3, digit4) {
             // NOP - do nothing
             (0, 0, 0, 0) => (),
+            // CLS - clear screen
             (0, 0, 0xE, 0) => {
-                // CLS - clear screen
                 self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
             }
             // RET - return from subroutine
@@ -111,7 +123,6 @@ impl Emu {
             }
             // JMP NNN - jump to subroutine
             (1, _, _, _) => {
-                //TODO: change to 0xFFF if that does not work but it should be the same
                 let nnn = op & 0x0FFF;
                 self.pc = nnn;
             }
@@ -121,7 +132,7 @@ impl Emu {
                 self.push(self.pc);
                 self.pc = nnn;
             }
-            // SKIP VX == NN
+            // SKIP IF VX == NN
             (3, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0x00FF) as u8;
@@ -129,7 +140,7 @@ impl Emu {
                     self.pc += 2;
                 }
             }
-            // SKIP VX != NN
+            // SKIP IF VX != NN
             (4, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0x00FF) as u8;
@@ -137,7 +148,7 @@ impl Emu {
                     self.pc += 2;
                 }
             }
-            // SKIP VX == VY
+            // SKIP IF VX == VY
             (5, _, _, 0) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -145,7 +156,7 @@ impl Emu {
                     self.pc += 2;
                 }
             }
-            // VX == NN
+            // Set VX = NN
             (6, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0x00FF) as u8;
@@ -157,7 +168,7 @@ impl Emu {
                 let nn = (op & 0x00FF) as u8;
                 self.v_reg[x] = self.v_reg[x].wrapping_add(nn); // preventing overflow panic
             }
-            // VX = VY
+            // Set VX = VY
             (8, _, _, 0) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -192,7 +203,7 @@ impl Emu {
                 self.v_reg[x] = new_vx;
                 self.v_reg[0xF] = new_vf;
             }
-            // VX += VY
+            // VX -= VY
             (8, _, _, 5) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
@@ -363,15 +374,15 @@ impl Emu {
             // BCD
             (0xF, _, 3, 3) => {
                 let x = digit2 as usize;
-                let vx = self.v_reg[x] as f32;
+                let vx = self.v_reg[x] as usize;
 
-                let hundreds = (vx / 100.0).floor() as u8;
-                let tens = ((vx / 10.0) % 10.0).floor() as u8;
-                let ones = (vx % 10.0) as u8;
+                // Retrieve the BCD result in a single lookup
+                let bcd_result = BCD_LOOKUP[vx];
 
-                self.ram[self.i_reg as usize] = hundreds;
-                self.ram[(self.i_reg + 1) as usize] = tens;
-                self.ram[(self.i_reg + 2) as usize] = ones;
+                //Write the BCD digits to RAM
+                self.ram[self.i_reg as usize] = bcd_result[0];
+                self.ram[(self.i_reg + 1) as usize] = bcd_result[1];
+                self.ram[(self.i_reg + 2) as usize] = bcd_result[2];
             }
             // STORE V0 - VX
             (0xF, _, 5, 5) => {
@@ -422,6 +433,7 @@ impl Emu {
         self.ram[start..end].copy_from_slice(data);
     }
 
+    // Stack operations
     fn push(&mut self, val: u16) {
         self.stack[self.sp as usize] = val;
         self.sp += 1;
