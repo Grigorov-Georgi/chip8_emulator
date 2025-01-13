@@ -412,7 +412,17 @@ impl Emu {
 
         if self.st > 0 {
             if self.st == 1 {
-                //todo!("beep")
+                // ASCII (Bell) character
+                print!("\x07");
+
+                // stdout is line-buffered when connected to a terminal
+                // This means data is not sent to the terminal immediately but is held in a buffer until
+                //      - a newline (\n) is printed ->  print!("\x07\n") - will also do the job
+                //      - the buffer becomes full
+                //      - explicit buffer flush like the one below
+                if let Err(e) = std::io::Write::flush(&mut std::io::stdout()) {
+                    println!("Failed to flush stdout: {e}");
+                }
             }
 
             self.st -= 1;
