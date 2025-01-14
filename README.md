@@ -30,19 +30,28 @@ cargo run ./games/BLINKY
 ```
 
 ## Browser Application (wasm)
+1. Install wasm-pack
+```bash
+cargo install wasm-pack
+```
 
-1. Build the wasm from the wasm folder [chip8_emulator/wasm] and move the resulted files into web folder
+2. Build the wasm from the wasm folder [chip8_emulator/wasm] and move the resulted files into web folder
 
 ```bash
 wasm-pack build --target web & mv pkg/wasm_bg.wasm ../web & mv pkg/wasm.js ../web
 ```
 
-2. Start python server from web folder [chip8_emulator/web]
+3. Install python if missing
+```bash
+brew install python
+```
+
+4. Start python server from web folder [chip8_emulator/web]
 ```bash
 python3 -m http.server
 ```
 
-3. Go to localhost:8000 and play
+3. Go at localhost:8000 and play
 
 ## Game controls
 
