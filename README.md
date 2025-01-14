@@ -2,7 +2,8 @@
 
 A simple CHIP-8 emulator written in Rust.
 
-## Setup
+## Desktop Application (runner)
+
 1. Install Rust
    - Follow the instructions at https://www.rust-lang.org/tools/install to install Rust.
    
@@ -13,9 +14,9 @@ A simple CHIP-8 emulator written in Rust.
 brew install sdl2
 ```
 
-   - For additional configuration details, refer to: https://github.com/PistonDevelopers/rust-empty/issues/175.
+- For additional configuration details, refer to: https://github.com/PistonDevelopers/rust-empty/issues/175.
 
-## Run
+3. Run
 A few games are added to ```./games``` folder. To run a CHIP-8 ROM, use the following command:
 
 ```bash
@@ -27,6 +28,21 @@ Example:
 ```bash
 cargo run ./games/BLINKY
 ```
+
+## Browser Application (wasm)
+
+1. Build the wasm from the wasm folder [chip8_emulator/wasm] and move the resulted files into web folder
+
+```bash
+wasm-pack build --target web & mv pkg/wasm_bg.wasm ../web & mv pkg/wasm.js ../web
+```
+
+2. Start python server from web folder [chip8_emulator/web]
+```bash
+python3 -m http.server
+```
+
+3. Go to localhost:8000 and play
 
 ## Game controls
 

@@ -4,5 +4,6 @@ resolver = "2"
 
 members = [
     "chip8_core",
-    "runner"
+    "runner",
+    "wasm",
 ]
