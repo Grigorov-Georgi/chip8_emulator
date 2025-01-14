@@ -28,30 +28,28 @@ async function run() {
         chip8.keypress(evt, false)
     })
 
-    input.addEventListener("change", function (evt) {
-        // Stop previous game from rendering, if one exists
-        if (anim_frame != 0) {
-            window.cancelAnimationFrame(anim_frame)
-        }
+    const loadGameButton = document.getElementById("loadGameButton")
+    const gameSelect = document.getElementById("gameSelect")
 
-        let file = evt.target.files[0]
-        console.log(file)
-        if (!file) {
-            alert("Failed to read the file")
-            return
-        }
+    loadGameButton.addEventListener("click", async () => {
+        try {
+            if (anim_frame != 0) {
+                window.cancelAnimationFrame(anim_frame)
+            }
 
-        let fr = new FileReader();
-        fr.onload = function (e) {
-            let buffer = fr.result
-            const rom = new Uint8Array(buffer)
+            const response = await fetch(gameSelect.value)
+            const romData = await response.arrayBuffer()
+
+            const rom = new Uint8Array(romData)
             chip8.reset()
             chip8.load_game(rom)
             mainloop(chip8)
-        }
 
-        fr.readAsArrayBuffer(file)
-    }, false)
+            console.log(`Loaded game from: ${gamePath}`);
+        } catch (error) {
+            console.error("Error loading game:", error);
+        }
+    })
 }
 
 function mainloop(chip8) {

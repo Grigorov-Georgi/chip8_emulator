@@ -216,4 +216,4 @@ git config core.hooksPath .githooks
 ### Optional
 - [X] add audio support
 - [X] make the emulator runnable in the browser
-- [ ] make the selection of the game in the browser to happen with drop down
+- [X] make the selection of the game in the browser to happen with drop down
