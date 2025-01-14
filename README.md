@@ -208,11 +208,12 @@ git config core.hooksPath .githooks
 ## TODO
 
 ### Required
-- [ ] improve error handling
+- [X] improve error handling
 - [X] fix the keyboard input
 - [X] add keyboard instructions to the README.md file
+- [ ] add tests
 
 ### Optional
-- [ ] add audio support
-- [ ] make the emulator runnable in the browser
-
+- [X] add audio support
+- [X] make the emulator runnable in the browser
+- [ ] make the selection of the game in the browser to happen with drop down
