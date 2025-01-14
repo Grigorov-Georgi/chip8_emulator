@@ -1,7 +1,7 @@
 use chip8_core::*;
-use wasm_bindgen::{JsCast, prelude::*};
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, KeyboardEvent};
 use js_sys::Uint8Array;
+use wasm_bindgen::{prelude::*, JsCast};
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement, KeyboardEvent};
 
 #[wasm_bindgen]
 pub struct EmuWasm {
@@ -22,8 +22,10 @@ impl EmuWasm {
             .map_err(|_| ())
             .unwrap();
 
-        let ctx = canvas.get_context("2d")
-            .unwrap().unwrap()
+        let ctx = canvas
+            .get_context("2d")
+            .unwrap()
+            .unwrap()
             .dyn_into::<CanvasRenderingContext2d>()
             .unwrap();
 
@@ -61,10 +63,12 @@ impl EmuWasm {
     #[wasm_bindgen]
     pub fn draw_screen(&mut self, scale: usize) {
         let disp = self.chip8.get_display();
-        for i in 0..(SCREEN_WIDTH * SCREEN_HEIGHT) {
-            if disp[i] {
+
+        for (i, &pixel) in disp.iter().enumerate() {
+            if pixel {
                 let x = i % SCREEN_WIDTH;
                 let y = i / SCREEN_WIDTH;
+
                 self.ctx.fill_rect(
                     (x * scale) as f64,
                     (y * scale) as f64,
